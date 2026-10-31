@@ -75,38 +75,39 @@ export default function SiteHeader({ siteName, whatsapp }: Props) {
         sx={{ maxWidth: 1200, width: "100%", mx: "auto", gap: 3, py: 1 }}
       >
         {/* Brand Logo inside hero overlay header */}
-        <Box
-          component={Link}
+        <Link
           href="/"
           aria-label={`${siteName} home`}
-          sx={{ display: "flex", mr: "auto", textDecoration: "none" }}
+          style={{ display: "flex", marginRight: "auto", textDecoration: "none" }}
         >
           <Logo height={100} priority />
-        </Box>
+        </Link>
 
         {/* Desktop Navigation Overlay Links */}
         <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3, alignItems: "center" }}>
-          {NAV.map((n) => (
-            <Button
-              key={n.href}
-              component={Link}
-              href={n.href}
-              sx={{
-                borderRadius: 0,
-                px: 0.5,
-                py: 1,
-                minWidth: 0,
-                fontWeight: isActive(n.href) ? 700 : 500,
-                color: isActive(n.href) ? "#FDE7B0" : "#FFFFFF",
-                borderBottom: isActive(n.href) ? "2.5px solid #FDE7B0" : "2.5px solid transparent",
-                textTransform: "none",
-                fontSize: 15,
-                "&:hover": { bgcolor: "transparent", color: "#FDE7B0" },
-              }}
-            >
-              {n.label}
-            </Button>
-          ))}
+          {NAV.map((n) => {
+            const active = isActive(n.href);
+            return (
+              <Link key={n.href} href={n.href} style={{ textDecoration: "none" }}>
+                <Button
+                  sx={{
+                    borderRadius: 0,
+                    px: 0.5,
+                    py: 1,
+                    minWidth: 0,
+                    fontWeight: active ? 700 : 500,
+                    color: active ? "#FDE7B0" : "#FFFFFF",
+                    borderBottom: active ? "2.5px solid #FDE7B0" : "2.5px solid transparent",
+                    textTransform: "none",
+                    fontSize: 15,
+                    "&:hover": { bgcolor: "transparent", color: "#FDE7B0" },
+                  }}
+                >
+                  {n.label}
+                </Button>
+              </Link>
+            );
+          })}
 
           {/* Book Now WhatsApp CTA */}
           <Button
@@ -148,24 +149,30 @@ export default function SiteHeader({ siteName, whatsapp }: Props) {
       <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
         <Box sx={{ width: 270, p: 2 }}>
           <List>
-            {NAV.map((n) => (
-              <ListItemButton
-                key={n.href}
-                component={Link}
-                href={n.href}
-                selected={isActive(n.href)}
-                onClick={() => setOpen(false)}
-                sx={{ borderRadius: 2, mb: 0.5 }}
-              >
-                <ListItemText
-                  primary={n.label}
-                  primaryTypographyProps={{
-                    fontWeight: isActive(n.href) ? 700 : 500,
-                    color: isActive(n.href) ? "#006C9C" : "text.primary",
-                  }}
-                />
-              </ListItemButton>
-            ))}
+            {NAV.map((n) => {
+              const active = isActive(n.href);
+              return (
+                <Link
+                  key={n.href}
+                  href={n.href}
+                  onClick={() => setOpen(false)}
+                  style={{ textDecoration: "none" }}
+                >
+                  <ListItemButton
+                    selected={active}
+                    sx={{ borderRadius: 2, mb: 0.5 }}
+                  >
+                    <ListItemText
+                      primary={n.label}
+                      primaryTypographyProps={{
+                        fontWeight: active ? 700 : 500,
+                        color: active ? "#006C9C" : "text.primary",
+                      }}
+                    />
+                  </ListItemButton>
+                </Link>
+              );
+            })}
           </List>
           <Box sx={{ p: 1, mt: 2 }}>
             <Button
