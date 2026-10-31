@@ -41,7 +41,7 @@ export default function SiteHeader({ siteName, whatsapp }: Props) {
 
   return (
     <AppBar
-      position="absolute"
+      position="sticky"
       color="transparent"
       elevation={0}
       component="header"
@@ -49,9 +49,14 @@ export default function SiteHeader({ siteName, whatsapp }: Props) {
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 10,
-        bgcolor: "transparent",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+        zIndex: 1100,
+        backgroundImage: "url('/hero.webp')",
+        backgroundPosition: { xs: "center top", md: "top center" },
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backdropFilter: "blur(6px)",
+        WebkitBackdropFilter: "blur(6px)",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
       }}
     >
       <style
@@ -72,18 +77,18 @@ export default function SiteHeader({ siteName, whatsapp }: Props) {
       <Toolbar
         component="nav"
         aria-label="Main"
-        sx={{ maxWidth: 1200, width: "100%", mx: "auto", gap: 3, py: 1 }}
+        sx={{ maxWidth: 1200, width: "100%", mx: "auto", gap: 3, py: 1, px: { xs: 2, sm: 3 } }}
       >
-        {/* Brand Logo inside hero overlay header */}
+        {/* Brand Logo */}
         <Link
           href="/"
           aria-label={`${siteName} home`}
           style={{ display: "flex", marginRight: "auto", textDecoration: "none" }}
         >
-          <Logo height={100} priority />
+         <Logo height={70} priority />
         </Link>
 
-        {/* Desktop Navigation Overlay Links */}
+        {/* Desktop Navigation Links */}
         <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3, alignItems: "center" }}>
           {NAV.map((n) => {
             const active = isActive(n.href);

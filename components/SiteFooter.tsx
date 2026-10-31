@@ -1,8 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import HomeIcon from "@mui/icons-material/Home";
+import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
+import DesignServicesIcon from "@mui/icons-material/DesignServices";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import Logo from "@/components/Logo";
 import { SEO_PAGES } from "@/lib/seo-pages";
 import { waLink } from "@/lib/whatsapp";
@@ -24,6 +29,12 @@ const linkSx = {
 };
 
 export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
+  const pathname = usePathname();
+  const whatsappUrl = waLink(
+    settings.whatsappNumber || "919000000000",
+    "Hello, I would like to make an enquiry."
+  );
+
   const socials: [string, string][] = ([
     ["Instagram", settings.instagramUrl],
     ["Facebook", settings.facebookUrl],
@@ -31,8 +42,24 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
     ["Tripadvisor", settings.tripadvisorUrl],
   ] as [string, string][]).filter(([, url]) => url);
 
+  // Mobile bottom nav items
+  const mobileNavItems = [
+    { label: "Home", href: "/", icon: <HomeIcon fontSize="small" /> },
+    { label: "Boats", href: "/houseboats", icon: <DirectionsBoatIcon fontSize="small" /> },
+    { label: "Services", href: "/services", icon: <DesignServicesIcon fontSize="small" /> },
+    { label: "Support", href: whatsappUrl, icon: <SupportAgentIcon fontSize="small" />, external: true },
+  ];
+
   return (
-    <Box component="footer" sx={{ bgcolor: "#04385B", color: "#CFE3EA", mt: 9 }}>
+    <Box
+      component="footer"
+      sx={{
+        bgcolor: "#04385B",
+        color: "#CFE3EA",
+        mt: 9,
+        pb: { xs: 8, md: 0 }, // Adds space on mobile so content isn't covered by the fixed bottom bar
+      }}
+    >
       <Container
         maxWidth="lg"
         sx={{
@@ -53,7 +80,7 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
             component={Link}
             href="/"
             sx={{
-               borderRadius: 3,
+              borderRadius: 3,
               px: 2,
               py: 1,
               display: "inline-block",
@@ -69,10 +96,7 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
           </Typography>
           <Button
             component="a"
-            href={waLink(
-              settings.whatsappNumber || "919000000000",
-              "Hello, I would like to make an enquiry."
-            )}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             variant="contained"
@@ -111,7 +135,7 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
           ))}
         </Stack>
 
-        {/* COLUMN 3: Alleppey Services (All links point strictly to /services) */}
+        {/* COLUMN 3: Alleppey Services */}
         <Stack spacing={1.2} component="nav" aria-label="Alleppey houseboat services">
           <Typography fontWeight={700} color="#fff" sx={{ mb: 0.5, fontSize: 16 }}>
             Alleppey services
@@ -175,6 +199,64 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
       >
         © {new Date().getFullYear()} {settings.siteName || "Alleppey Mermaid Houseboats"}. Houseboats in Alleppey (Alappuzha), Kerala. All rights reserved.
       </Box>
+
+      {/* ---------------------------------------------------- */}
+      {/* MOBILE FIXED BOTTOM NAVIGATION BAR                   */}
+      {/* ---------------------------------------------------- */}
+      <Box
+        sx={{
+          display: { xs: "flex", md: "none" },
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          bgcolor: "#042842",
+          borderTop: "1px solid rgba(255, 255, 255, 0.15)",
+          zIndex: 1200,
+          boxShadow: "0 -4px 12px rgba(0,0,0,0.15)",
+          justifyContent: "space-around",
+          py: 1,
+        }}
+      >
+        {mobileNavItems.map((item) => {
+          const isActive = !item.external && pathname === item.href;
+          return (
+            <Box
+              key={item.label}
+              component={item.external ? "a" : Link}
+              href={item.href}
+              {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItem: "center",
+                justifyContent: "center",
+                textDecoration: "none",
+                color: isActive ? "#FDE7B0" : "#CFE3EA",
+                flex: 1,
+                py: 0.5,
+                textAlign: "center",
+                transition: "color 0.2s ease",
+                "&:hover": { color: "#fff" },
+              }}
+            >
+              <Box sx={{ display: "flex", justifyContent: "center", mb: 0.3 }}>
+                {item.icon}
+              </Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  fontSize: 11,
+                  fontWeight: isActive ? 700 : 500,
+                  lineHeight: 1,
+                }}
+              >
+                {item.label}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
     </Box>
   );
-} 
+}

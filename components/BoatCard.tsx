@@ -60,10 +60,16 @@ export default function BoatCard({
   >("Overnight ( 12PM-9AM )");
 
   const isHouseboat = boat.type?.toLowerCase() === "houseboat";
+  
+  // Safely resolve images list with a guaranteed fallback to /hero.webp
   const imagesList =
     boat.images && boat.images.length > 0
-      ? boat.images
+      ? boat.images.map((img) => ({
+          url: typeof img === "string" ? img : img.url || "/hero.webp",
+          alt: typeof img === "object" && img.alt ? img.alt : boat.name,
+        }))
       : [{ url: "/hero.webp", alt: boat.name }];
+
   const mainImgUrl = imagesList[0]?.url || "/hero.webp";
 
   const handleNextImage = () => {
@@ -124,7 +130,6 @@ Please send your Houseboat Requirements, for best service & Rate`;
             position: "relative",
             width: "100%",
             height: 180,
-            minHeight: 180,
             bgcolor: "#EAEAEA",
             cursor: "pointer",
           }}
@@ -240,16 +245,19 @@ Please send your Houseboat Requirements, for best service & Rate`;
         onClose={() => setOpenDetails(false)}
         maxWidth="sm"
         fullWidth
+        PaperProps={{ sx: { borderRadius: 3 } }}
       >
         <DialogTitle
           sx={{
             m: 0,
-            p: 2,
+            p: 2.5,
             fontWeight: 700,
             color: "#042842",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            bgcolor: "#F8F9FA",
+            borderBottom: "1px solid #EAEAEA",
           }}
         >
           {boat.name}
@@ -266,11 +274,11 @@ Please send your Houseboat Requirements, for best service & Rate`;
             sx={{
               position: "relative",
               width: "100%",
-              height: { xs: 220, sm: 300 },
-              borderRadius: 2,
+              height: { xs: 240, sm: 300 },
+              borderRadius: 2.5,
               overflow: "hidden",
               mb: 2.5,
-              bgcolor: "#000",
+              bgcolor: "#F0F2F5",
             }}
           >
             <Image
@@ -319,6 +327,10 @@ Please send your Houseboat Requirements, for best service & Rate`;
                     bottom: 12,
                     left: "50%",
                     transform: "translateX(-50%)",
+                    bgcolor: "rgba(0,0,0,0.4)",
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 4,
                   }}
                 >
                   {imagesList.map((_, idx) => (
@@ -332,7 +344,7 @@ Please send your Houseboat Requirements, for best service & Rate`;
                         bgcolor:
                           activeImageIndex === idx
                             ? "#00A859"
-                            : "rgba(255,255,255,0.6)",
+                            : "rgba(255,255,255,0.7)",
                         cursor: "pointer",
                         transition: "all 0.2s ease",
                       }}
@@ -413,7 +425,7 @@ Please send your Houseboat Requirements, for best service & Rate`;
           </Stack>
         </DialogContent>
 
-        <DialogActions sx={{ p: 2 }}>
+        <DialogActions sx={{ p: 2, bgcolor: "#F8F9FA" }}>
           <Button
             fullWidth
             variant="contained"
@@ -443,16 +455,17 @@ Please send your Houseboat Requirements, for best service & Rate`;
         onClose={() => setOpenEnquiry(false)}
         maxWidth="xs"
         fullWidth
+        PaperProps={{ sx: { borderRadius: 3 } }}
       >
-        <DialogTitle sx={{ m: 0, p: 2, fontWeight: 700, color: "#042842" }}>
+        <DialogTitle sx={{ m: 0, p: 2.5, fontWeight: 700, color: "#042842", bgcolor: "#F8F9FA" }}>
           Enquire for {boat.name}
           <IconButton
             aria-label="close"
             onClick={() => setOpenEnquiry(false)}
             sx={{
               position: "absolute",
-              right: 8,
-              top: 8,
+              right: 12,
+              top: 16,
               color: (theme) => theme.palette.grey[500],
             }}
           >
@@ -460,7 +473,7 @@ Please send your Houseboat Requirements, for best service & Rate`;
           </IconButton>
         </DialogTitle>
 
-        <DialogContent dividers>
+        <DialogContent dividers sx={{ p: 3 }}>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
               label="Your Name"
@@ -557,7 +570,7 @@ Please send your Houseboat Requirements, for best service & Rate`;
           </Stack>
         </DialogContent>
 
-        <DialogActions sx={{ p: 2 }}>
+        <DialogActions sx={{ p: 2.5, bgcolor: "#F8F9FA" }}>
           <Button
             fullWidth
             variant="contained"
