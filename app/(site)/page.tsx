@@ -76,10 +76,13 @@ const IMG = {
   d: unsplash("photo-1590490360182-c33d57733427"),
 };
 
-function dummyBoat(n: number, url: string, b: Pick<BoatDTO, "name" | "slug" | "description" | "capacity" | "duration" | "price" | "routeTo" | "routeStops" | "type">): BoatDTO {
+function dummyBoat(
+  n: number,
+  url: string,
+  b: Pick<BoatDTO, "name" | "slug" | "description" | "capacity" | "duration" | "price" | "routeTo" | "routeStops" | "type">
+): BoatDTO {
   return {
     _id: `dummy-${n}`,
-    type: b.type || "houseboat",
     routeFrom: "Punnamada Jetty",
     routeImage: null,
     images: [{ 
@@ -98,6 +101,7 @@ function dummyBoat(n: number, url: string, b: Pick<BoatDTO, "name" | "slug" | "d
     createdAt: now,
     updatedAt: now,
     ...b,
+    type: b.type || "houseboat", // Ensures proper fallback if type is ever omitted
   };
 }
 
