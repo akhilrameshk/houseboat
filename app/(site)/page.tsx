@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Box, Button, Chip, Container, Stack, Typography } from "@mui/material";
 import type { SvgIconComponent } from "@mui/icons-material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -75,10 +76,10 @@ const IMG = {
   d: unsplash("photo-1590490360182-c33d57733427"),
 };
 
-function dummyBoat(n: number, url: string, b: Pick<BoatDTO, "name" | "slug" | "description" | "capacity" | "duration" | "price" | "routeTo" | "routeStops">): BoatDTO {
+function dummyBoat(n: number, url: string, b: Pick<BoatDTO, "name" | "slug" | "description" | "capacity" | "duration" | "price" | "routeTo" | "routeStops" | "type">): BoatDTO {
   return {
     _id: `dummy-${n}`,
-    type: "houseboat",
+    type: b.type || "houseboat",
     routeFrom: "Punnamada Jetty",
     routeImage: null,
     images: [{ 
@@ -101,11 +102,14 @@ function dummyBoat(n: number, url: string, b: Pick<BoatDTO, "name" | "slug" | "d
 }
 
 const DUMMY_BOATS: BoatDTO[] = [
-  dummyBoat(1, IMG.a, { name: "Lake Serenity", slug: "lake-serenity", description: "Experience luxury backwater cruising with premium AC bedrooms and traditional Keralan cuisine.", capacity: "Sleeps 6 · 2 bedrooms", duration: "Overnight Stay", price: 8500, routeTo: "Kuttanad Backwaters", routeStops: "Vembanad Lake, Kuttanad Paddy Fields" }),
-  dummyBoat(2, IMG.b, { name: "Golden Hour", slug: "golden-hour", description: "A cozy single-bedroom deluxe houseboat ideal for couples and honeymooners.", capacity: "Sleeps 4 · 1 bedroom", duration: "Overnight Stay", price: 6500, routeTo: "Alleppey Canal Circuit", routeStops: "Punnamada Lake, R-Block Canal" }),
-  dummyBoat(3, IMG.c, { name: "Palm Drift", slug: "palm-drift", description: "Spacious 3-bedroom houseboat tailored for family vacations and group trips.", capacity: "Sleeps 8 · 3 bedrooms", duration: "Overnight Stay", price: 12000, routeTo: "Vembanad Lake", routeStops: "Kavalam, Kainakary Village" }),
-  dummyBoat(4, IMG.d, { name: "Royal Suite", slug: "royal-suite", description: "Ultra-luxury houseboat with full glass walls, upper deck lounge, and personal chef.", capacity: "Premium · AC rooms", duration: "Day Cruise & Overnight", price: 15000, routeTo: "Kayamkulam Backwaters", routeStops: "Pathiramanal Island, Kumarakom Route" }),
+  dummyBoat(1, IMG.a, { type: "houseboat", name: "Lake Serenity", slug: "lake-serenity", description: "Experience luxury backwater cruising with premium AC bedrooms and traditional Keralan cuisine.", capacity: "Sleeps 6 · 2 bedrooms", duration: "Overnight Stay", price: 8500, routeTo: "Kuttanad Backwaters", routeStops: "Vembanad Lake, Kuttanad Paddy Fields" }),
+  dummyBoat(2, IMG.b, { type: "houseboat", name: "Golden Hour", slug: "golden-hour", description: "A cozy single-bedroom deluxe houseboat ideal for couples and honeymooners.", capacity: "Sleeps 4 · 1 bedroom", duration: "Overnight Stay", price: 6500, routeTo: "Alleppey Canal Circuit", routeStops: "Punnamada Lake, R-Block Canal" }),
+  dummyBoat(3, IMG.c, { type: "shikara", name: "Palm Drift Shikara", slug: "palm-drift-shikara", description: "Spacious wooden shikara for peaceful backwater trips.", capacity: "Seating for 8", duration: "3 Hours", price: 2500, routeTo: "Vembanad Lake", routeStops: "Kavalam, Kainakary Village" }),
+  dummyBoat(4, IMG.d, { type: "kayaking", name: "Lotus Paddle Kayak", slug: "lotus-paddle-kayak", description: "Guided morning paddling tour through hidden narrow streams.", capacity: "Single / Tandem", duration: "2 Hours", price: 1200, routeTo: "Kainakary Streams", routeStops: "Lotus Village" }),
+  dummyBoat(5, IMG.a, { type: "speedboat", name: "Express Backwater Jet", slug: "express-backwater-jet", description: "Fast, exciting rides across Vembanad Lake.", capacity: "Up to 6 guests", duration: "1 Hour", price: 3500, routeTo: "Vembanad Circuit", routeStops: "Punnamada Lake" }),
+  dummyBoat(6, IMG.b, { type: "houseboat", name: "Royal Suite Cruiser", slug: "royal-suite-cruiser", description: "Ultra-luxury houseboat with full glass walls and upper deck lounge.", capacity: "Sleeps 8 · 3 bedrooms", duration: "Overnight Stay", price: 15000, routeTo: "Pathiramanal Island", routeStops: "Kumarakom Route" }),
 ];
+
 const dummyGallery = (n: number, url: string, caption: string): GalleryItemDTO => ({
   _id: `g${n}`,
   url,
@@ -138,7 +142,7 @@ export default async function HomePage() {
     await connectDB();
     const [fetchedTypes, fetchedBoats, fetchedGallery] = await Promise.all([
       BoatType.find().sort({ name: 1 }).lean().then((r) => plain<BoatTypeDTO[]>(r)),
-      Boat.find({ active: true }).sort({ featured: -1, sortOrder: 1, createdAt: -1 }).limit(8).lean().then((r) => plain<BoatDTO[]>(r)),
+      Boat.find({ active: true }).sort({ featured: -1, sortOrder: 1, createdAt: -1 }).limit(12).lean().then((r) => plain<BoatDTO[]>(r)),
       GalleryItem.find({ showOnHome: true }).sort({ createdAt: -1 }).limit(12).lean().then((r) => plain<GalleryItemDTO[]>(r)),
     ]);
     types = fetchedTypes;
@@ -170,7 +174,7 @@ export default async function HomePage() {
       {/* Structured data only for real boats, never for preview data */}
       {boats.length > 0 && <JsonLd data={itemListLd(boats)} />}
 
-      {/* Common hero (components/Hero.tsx) */}
+      {/* Common hero */}
       <Hero
         size="large"
         eyebrow="✨ ALLEPPEY MERMAID HOUSEBOATS"
@@ -234,7 +238,7 @@ export default async function HomePage() {
         </Box>
       </Container>
 
-      {/* Popular Boats */}
+      {/* Popular Boats Section */}
       <Container maxWidth="lg" component="section" sx={{ pt: 6, pb: 4 }}>
         <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "flex-end", mb: 1 }}>
           <Box>
@@ -243,9 +247,11 @@ export default async function HomePage() {
             </Typography>
             <Typography sx={{ fontSize: 15, color: "text.secondary" }}>Swipe to see more.</Typography>
           </Box>
-          <Button component="a" href="/houseboats" variant="outlined" size="small" sx={outlineBtn}>
-            View all →
-          </Button>
+          <Link href="/houseboats" style={{ textDecoration: "none" }}>
+            <Button variant="outlined" size="small" sx={outlineBtn}>
+              View all →
+            </Button>
+          </Link>
         </Stack>
 
         <Stack direction="row" spacing={1} sx={{ mb: 3.5, mt: 2, overflowX: "auto" }}>
@@ -263,21 +269,46 @@ export default async function HomePage() {
           ))}
         </Stack>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2,1fr)", md: "repeat(4,1fr)" }, gap: 3 }}>
-          {activeBoats.map((b) => (
-            <BoatCard key={b._id} boat={b} typeName={typeName[b.type] || "Houseboat"} whatsapp={whatsapp} />
+        {/* Desktop 6-card row | Mobile 1 + 1/4 card peek touch swipe (up to 4 items) */}
+        <Box
+          sx={{
+            display: { xs: "flex", md: "grid" },
+            gridTemplateColumns: { md: "repeat(6, 1fr)" },
+            gap: 2.5,
+            overflowX: { xs: "auto", md: "visible" },
+            scrollSnapType: { xs: "x mandatory", md: "none" },
+            WebkitOverflowScrolling: "touch",
+            pb: { xs: 2, md: 0 },
+            mx: { xs: -2, md: 0 },
+            px: { xs: 2, md: 0 },
+            "&::-webkit-scrollbar": { display: "none" },
+          }}
+        >
+          {activeBoats.slice(0, 6).map((b, index) => (
+            <Box
+              key={b._id}
+              sx={{
+                minWidth: { xs: "78vw", sm: "45vw", md: "15vw", },
+                width: { xs: "78vw", sm: "45vw", md:"15vw", },
+                flexShrink: 0,
+                scrollSnapAlign: "start",
+                display: { xs: index >= 4 ? "none" : "block", md: "block" },
+              }}
+            >
+              <BoatCard boat={b} typeName={typeName[b.type] || "Houseboat"} whatsapp={whatsapp} />
+            </Box>
           ))}
         </Box>
 
         <Box sx={{ textAlign: "center", mt: 4 }}>
-          <Button
-            component="a"
-            href="/houseboats"
-            variant="contained"
-            sx={{ bgcolor: "#006C9C", textTransform: "none", px: 4, py: 1.2, borderRadius: 2, fontWeight: 600, "&:hover": { bgcolor: "#00557A" } }}
-          >
-            View all boats
-          </Button>
+          <Link href="/houseboats" style={{ textDecoration: "none" }}>
+            <Button
+              variant="contained"
+              sx={{ bgcolor: "#006C9C", textTransform: "none", px: 4, py: 1.2, borderRadius: 2, fontWeight: 600, "&:hover": { bgcolor: "#00557A" } }}
+            >
+              View all boats
+            </Button>
+          </Link>
         </Box>
       </Container>
 
@@ -348,7 +379,7 @@ export default async function HomePage() {
         <FaqSection faqs={HOME_FAQS} title="Alleppey houseboat FAQs" />
       </Container>
 
-      {/* Enquiry Banner with the pulsing WhatsApp button (animation lives in Hero.tsx) */}
+      {/* Enquiry Banner */}
       <Container maxWidth="lg" component="section" sx={{ pt: 4, pb: 8 }}>
         <Box
           sx={{
