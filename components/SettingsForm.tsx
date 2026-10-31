@@ -78,7 +78,11 @@ export default function SettingsForm({ initial }: { initial: SettingsDTO }) {
           <TextField label="Footer text" value={f.footerText} onChange={set("footerText")} multiline minRows={2} />
           <Box>
             <Typography fontWeight={700} sx={{ mb: 1 }}>Home page hero photo</Typography>
-            <ImageUploader images={f.heroImage ? [{ url: f.heroImage, publicId: "", width: 0, height: 0 }] : []} onChange={(a) => setF({ ...f, heroImage: a[0]?.url ?? "" })} label="Upload hero photo" />
+            <ImageUploader 
+              images={f.heroImage ? [{ url: f.heroImage, publicId: "", width: 0, height: 0, alt: "Hero Photo" }] : []} 
+              onChange={(a) => setF({ ...f, heroImage: a[0]?.url ?? "" })} 
+              label="Upload hero photo" 
+            />
           </Box>
           <Box><Button type="submit" variant="contained">Save settings</Button></Box>
         </Stack>

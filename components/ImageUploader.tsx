@@ -19,7 +19,7 @@ export default function ImageUploader({ images, onChange, multiple = false, labe
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const pick = async (e: ChangeEvent<HTMLInputElement>) => {
+ const pick = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     e.target.value = "";
     if (!files.length) return;
@@ -28,8 +28,14 @@ export default function ImageUploader({ images, onChange, multiple = false, labe
     const added: ImageDTO[] = [];
     for (const f of multiple ? files : files.slice(0, 1)) {
       try {
-        const r = await uploadImage(f);
-        added.push({ url: r.url, publicId: r.publicId, width: r.width, height: r.height });
+        const r:any = await uploadImage(f);
+        added.push({
+          url: r.url,
+          publicId: r.publicId,
+          width: r.width,
+          height: r.height,
+          alt: r.alt ?? f.name.replace(/\.[^/.]+$/, "") ?? "", // Resolves missing 'alt' property
+        });
       } catch (err) {
         setError(`${f.name}: ${err instanceof Error ? err.message : "Upload failed"}`);
       }
