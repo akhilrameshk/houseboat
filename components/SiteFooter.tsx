@@ -6,8 +6,8 @@ import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import HomeIcon from "@mui/icons-material/Home";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import Logo from "@/components/Logo";
 import { SEO_PAGES } from "@/lib/seo-pages";
 import { waLink } from "@/lib/whatsapp";
@@ -42,12 +42,12 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
     ["Tripadvisor", settings.tripadvisorUrl],
   ] as [string, string][]).filter(([, url]) => url);
 
-  // Mobile bottom nav items
+  // Updated Mobile bottom nav items: Home, Boats, Gallery, Services
   const mobileNavItems = [
     { label: "Home", href: "/", icon: <HomeIcon fontSize="small" /> },
     { label: "Boats", href: "/houseboats", icon: <DirectionsBoatIcon fontSize="small" /> },
+    { label: "Gallery", href: "/gallery", icon: <PhotoLibraryIcon fontSize="small" /> },
     { label: "Services", href: "/services", icon: <DesignServicesIcon fontSize="small" /> },
-    { label: "Support", href: whatsappUrl, icon: <SupportAgentIcon fontSize="small" />, external: true },
   ];
 
   return (
@@ -57,7 +57,7 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
         bgcolor: "#04385B",
         color: "#CFE3EA",
         mt: 9,
-        pb: { xs: 8, md: 0 }, // Adds space on mobile so content isn't covered by the fixed bottom bar
+        pb: { xs: 8, md: 0 },
       }}
     >
       <Container
@@ -219,17 +219,16 @@ export default function SiteFooter({ settings }: { settings: SettingsDTO }) {
         }}
       >
         {mobileNavItems.map((item) => {
-          const isActive = !item.external && pathname === item.href;
+          const isActive = pathname === item.href;
           return (
             <Box
               key={item.label}
-              component={item.external ? "a" : Link}
+              component={Link}
               href={item.href}
-              {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                alignItem: "center",
+                alignItems: "center",
                 justifyContent: "center",
                 textDecoration: "none",
                 color: isActive ? "#FDE7B0" : "#CFE3EA",

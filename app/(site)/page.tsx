@@ -217,7 +217,7 @@ export default async function HomePage() {
               <Box
                 key={s.name}
                 component="a"
-                href={`/houseboats?type=${s.name.toLowerCase()}`}
+                href={`/houseboats`}
                 sx={{
                   p: 3,
                   bgcolor: "#fff",
@@ -258,21 +258,7 @@ export default async function HomePage() {
           </Link>
         </Stack>
 
-        <Stack direction="row" spacing={1} sx={{ mb: 3.5, mt: 2, overflowX: "auto" }}>
-          <Chip label="All" component="a" href="/houseboats" clickable color="primary" sx={{ bgcolor: "#042842", fontWeight: 600 }} />
-          {["Houseboat", "Kayaking", "Shikara", "Speedboat"].map((t) => (
-            <Chip
-              key={t}
-              label={t}
-              component="a"
-              href={`/houseboats?type=${t.toLowerCase()}`}
-              clickable
-              variant="outlined"
-              sx={{ borderColor: "#E0E0E0", color: "#555", fontWeight: 500, "&:hover": { bgcolor: "#fff" } }}
-            />
-          ))}
-        </Stack>
-
+       
         {/* Desktop 6-card row | Mobile 1 + 1/4 card peek touch swipe (up to 4 items) */}
         <Box
           sx={{
