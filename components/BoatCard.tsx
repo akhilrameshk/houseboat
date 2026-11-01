@@ -139,7 +139,7 @@ Please send your Houseboat Requirements, for best service & Rate`;
           }}
         >
           <Image
-            src={"/hero.webp"}
+            src={mainImgUrl}
             alt={boat.name}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"

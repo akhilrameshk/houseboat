@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Box, Button, Container, Stack, Typography, Chip } from "@mui/material";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
 import RowingIcon from "@mui/icons-material/Rowing";
 import SailingIcon from "@mui/icons-material/Sailing";
 import SpeedIcon from "@mui/icons-material/Speed";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Hero from "@/components/Hero";
 import { SEO_PAGES } from "@/lib/seo-pages";
 import { getSettings } from "@/lib/settings";
 import { buildMetadata } from "@/lib/seo";
@@ -67,51 +67,18 @@ const MAIN_SERVICES = [
 
 export default async function ServicesPage() {
   const settings = await getSettings();
-  const wa = waLink(
-    settings?.whatsappNumber || "919000000000",
-    "Hello, I would like to enquire about your backwater services."
-  );
 
   return (
     <Box sx={{ bgcolor: "#F8F9FA", color: "#2B3A42", pb: 10 }}>
-      {/* Hero Header */}
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #04385B 0%, #0A5C85 60%, #0D73A6 100%)",
-          color: "#fff",
-          py: { xs: 6, md: 8 },
-        }}
-      >
-        <Container maxWidth="lg" sx={{
-          mt:10,}}>
-          <Breadcrumbs light items={[{ name: "Services", path: "/services" }]} />
-          <Typography
-            variant="h1"
-            sx={{
-              fontFamily: "serif",
-              fontSize: { xs: 34, md: 50 },
-              fontWeight: 700,
-              mb: 1.5,
-              lineHeight: 1.15,
-            }}
-          >
-            Alleppey Backwater Services & Packages
-          </Typography>
-          <Typography
-            sx={{
-              color: "#CFE3EA",
-              fontSize: { xs: 15, md: 17 },
-              maxWidth: 640,
-              lineHeight: 1.6,
-            }}
-          >
-            Choose from luxury houseboat stays, day cruises, guided kayaking tours, and traditional shikara rides across Alappuzha.
-          </Typography>
-        </Container>
-      </Box>
+      {/* Reusable Hero Component */}
+      <Hero
+        eyebrow="✨ ALLEPPEY MERMAID HOUSEBOATS"
+        title="Alleppey Backwater Services & Packages"
+        subtitle="Choose from luxury houseboat stays, day cruises, guided kayaking tours, and traditional shikara rides across Alappuzha."
+      />
 
       {/* Main Core Services Grid */}
-      <Container maxWidth="lg" sx={{ pt: { xs: 6, md: 8 } }}>
+      <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 6 } }}>
         <Typography
           variant="h2"
           sx={{

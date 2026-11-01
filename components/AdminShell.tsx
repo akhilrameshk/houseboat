@@ -34,7 +34,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
 
   const nav = (
     <Box sx={{ width: W, height: "100%", bgcolor: "#04385B", color: "#CFE3EA", display: "flex", flexDirection: "column", p: 1.5 }}>
-      <Box sx={{ bgcolor: "#fff", borderRadius: 2, p: 1, mb: 1, display: "inline-block", alignSelf: "flex-start" }}>
+      <Box sx={{ borderRadius: 2, p: 1, mb: 1, display: "inline-block", alignSelf: "flex-start" }}>
         <Logo height={50} />
       </Box>
       <Typography sx={{ fontSize: 11, letterSpacing: ".2em", fontWeight: 700, color: "#81C8D7", mb: 2, px: 0.5 }}>ADMIN PANEL</Typography>

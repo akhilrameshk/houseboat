@@ -5,7 +5,7 @@ import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Hero from "@/components/Hero";
 import { getSettings } from "@/lib/settings";
 import { buildMetadata } from "@/lib/seo";
 import { waLink } from "@/lib/whatsapp";
@@ -14,69 +14,74 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildMetadata({
   title: "About Alleppey Mermaid Houseboats | Houseboat Tours Alappuzha",
-  description: "About Alleppey Mermaid Houseboats: houseboat cruises, kayaking and shikara rides on the Alleppey backwaters in Kerala. Discover, relax, reconnect.",
+  description:
+    "About Alleppey Mermaid Houseboats: houseboat cruises, kayaking and shikara rides on the Alleppey backwaters in Kerala. Discover, relax, reconnect.",
   path: "/about-us",
-  keywords: ["alleppey houseboat company", "about alleppey mermaid houseboats", "alappuzha houseboat operator"],
+  keywords: [
+    "alleppey houseboat company",
+    "about alleppey mermaid houseboats",
+    "alappuzha houseboat operator",
+  ],
 });
 
 const HIGHLIGHTS = [
-  { icon: DirectionsBoatIcon, title: "Luxury & Comfort", desc: "Handpicked premium houseboats with air-conditioned luxury bedrooms and scenic upper decks." },
-  { icon: RestaurantIcon, title: "Authentic Kerala Cuisine", desc: "Freshly prepared Karimeen fry, traditional Kerala duck roast, and coconut-infused curries onboard." },
-  { icon: VerifiedIcon, title: "Safety & Reliability", desc: "Fully certified vessels with safety equipment and experienced local captains navigating backwater routes." },
-  { icon: SupportAgentIcon, title: "Tailored Experience", desc: "Honeymoon specials, family holidays, and private day cruises designed around your schedule." },
+  {
+    icon: DirectionsBoatIcon,
+    title: "Luxury & Comfort",
+    desc: "Handpicked premium houseboats with air-conditioned luxury bedrooms and scenic upper decks.",
+  },
+  {
+    icon: RestaurantIcon,
+    title: "Authentic Kerala Cuisine",
+    desc: "Freshly prepared Karimeen fry, traditional Kerala duck roast, and coconut-infused curries onboard.",
+  },
+  {
+    icon: VerifiedIcon,
+    title: "Safety & Reliability",
+    desc: "Fully certified vessels with safety equipment and experienced local captains navigating backwater routes.",
+  },
+  {
+    icon: SupportAgentIcon,
+    title: "Tailored Experience",
+    desc: "Honeymoon specials, family holidays, and private day cruises designed around your schedule.",
+  },
 ];
 
 const STEPS: [string, string, string][] = [
-  ["01", "Explore Our Fleet", "Browse our range of deluxe & luxury houseboats, shikaras, and kayaks with verified photos and routes."],
-  ["02", "Instant WhatsApp Booking", "Message us your travel dates, group size, and meal preferences. We reply instantly with live availability."],
-  ["03", "Sail Through Paradise", "Board at Punnamada Jetty, sip fresh coconut water, and glide through Kerala's tranquil backwaters."],
+  [
+    "01",
+    "Explore Our Fleet",
+    "Browse our range of deluxe & luxury houseboats, shikaras, and kayaks with verified photos and routes.",
+  ],
+  [
+    "02",
+    "Instant WhatsApp Booking",
+    "Message us your travel dates, group size, and meal preferences. We reply instantly with live availability.",
+  ],
+  [
+    "03",
+    "Sail Through Paradise",
+    "Board at Punnamada Jetty, sip fresh coconut water, and glide through Kerala's tranquil backwaters.",
+  ],
 ];
 
 export default async function AboutPage() {
   const settings = await getSettings();
-  const wa = waLink(settings?.whatsappNumber || "919000000000", "Hello, I would like to learn more about your houseboats.");
+  const wa = waLink(
+    settings?.whatsappNumber || "919000000000",
+    "Hello, I would like to learn more about your houseboats."
+  );
 
   return (
     <Box sx={{ bgcolor: "#F8F9FA", color: "#2B3A42", pb: 10 }}>
-      {/* Hero Header */}
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #04385B 0%, #0A5C85 60%, #0D73A6 100%)",
-          color: "#fff",
-          py: { xs: 6, md: 8 },
-          position: "relative",
-          overflow: "hidden"
-        }}
-      >
-        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1,
-          mt:10, }}>
-          <Breadcrumbs light items={[{ name: "About Us", path: "/about-us" }]} />
-          <Typography
-            variant="h1"
-            sx={{
-              fontFamily: "serif",
-              fontSize: { xs: 36, md: 52 },
-              fontWeight: 700,
-              mb: 1.5,
-              lineHeight: 1.15,
-            }}
-          >
-            Discover. Relax. Reconnect.
-          </Typography>
-          <Typography
-            sx={{
-              color: "#CFE3EA",
-              fontSize: { xs: 16, md: 18 },
-              maxWidth: 620,
-              lineHeight: 1.6,
-            }}
-          >
-            Your trusted gateway to pristine backwaters, authentic Keralan hospitality, and unforgettable houseboat cruises in Alleppey.
-          </Typography>
-        </Container>
-      </Box>
+      {/* Reusable Hero Component */}
+      <Hero
+        eyebrow="✨ ALLEPPEY MERMAID HOUSEBOATS"
+        title="Discover. Relax. Reconnect."
+        subtitle="Your trusted gateway to pristine backwaters, authentic Keralan hospitality, and unforgettable houseboat cruises in Alleppey."
+      />
 
-      <Container maxWidth="lg" sx={{ pt: { xs: 6, md: 8 } }}>
+      <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 6 } }}>
         {/* Brand Story Section */}
         <Box
           sx={{
@@ -162,21 +167,41 @@ export default async function AboutPage() {
               gap: 3,
             }}
           >
-            <Typography variant="h3" sx={{ fontFamily: "serif", fontSize: 24, fontWeight: 700, color: "#FDE7B0" }}>
+            <Typography
+              variant="h3"
+              sx={{
+                fontFamily: "serif",
+                fontSize: 24,
+                fontWeight: 700,
+                color: "#FDE7B0",
+              }}
+            >
               Why Travel With Us?
             </Typography>
             <Stack spacing={2.5}>
               <Box>
-                <Typography variant="h4" fontWeight={800} fontSize={28} color="#fff">100% Verified</Typography>
-                <Typography variant="body2" sx={{ color: "#CFE3EA" }}>Inspected boats with air conditioning & clean amenities.</Typography>
+                <Typography variant="h4" fontWeight={800} fontSize={28} color="#fff">
+                  100% Verified
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#CFE3EA" }}>
+                  Inspected boats with air conditioning & clean amenities.
+                </Typography>
               </Box>
               <Box>
-                <Typography variant="h4" fontWeight={800} fontSize={28} color="#fff">Custom Routes</Typography>
-                <Typography variant="body2" sx={{ color: "#CFE3EA" }}>Covering Kuttanad paddy fields, Kainakary & Vembanad Lake.</Typography>
+                <Typography variant="h4" fontWeight={800} fontSize={28} color="#fff">
+                  Custom Routes
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#CFE3EA" }}>
+                  Covering Kuttanad paddy fields, Kainakary & Vembanad Lake.
+                </Typography>
               </Box>
               <Box>
-                <Typography variant="h4" fontWeight={800} fontSize={28} color="#fff">Local Chefs</Typography>
-                <Typography variant="body2" sx={{ color: "#CFE3EA" }}>Enjoy home-style Kerala seafood and vegetarian feasts.</Typography>
+                <Typography variant="h4" fontWeight={800} fontSize={28} color="#fff">
+                  Local Chefs
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#CFE3EA" }}>
+                  Enjoy home-style Kerala seafood and vegetarian feasts.
+                </Typography>
               </Box>
             </Stack>
           </Box>
@@ -199,7 +224,13 @@ export default async function AboutPage() {
           </Typography>
           <Typography
             color="text.secondary"
-            sx={{ textAlign: "center", mb: 4, maxWidth: 540, mx: "auto", fontSize: 15 }}
+            sx={{
+              textAlign: "center",
+              mb: 4,
+              maxWidth: 540,
+              mx: "auto",
+              fontSize: 15,
+            }}
           >
             Every detail is arranged so you can sit back and embrace the tranquil beauty of Kerala.
           </Typography>
@@ -207,7 +238,11 @@ export default async function AboutPage() {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "repeat(2,1fr)", md: "repeat(4,1fr)" },
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "repeat(2,1fr)",
+                md: "repeat(4,1fr)",
+              },
               gap: 3,
             }}
           >
@@ -230,10 +265,22 @@ export default async function AboutPage() {
                   }}
                 >
                   <Icon sx={{ color: "#006C9C", fontSize: 32, mb: 1.5 }} />
-                  <Typography variant="h3" sx={{ fontSize: 18, fontWeight: 700, color: "#042842", mb: 1 }}>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: "#042842",
+                      mb: 1,
+                    }}
+                  >
                     {item.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, fontSize: 13.5 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ lineHeight: 1.6, fontSize: 13.5 }}
+                  >
                     {item.desc}
                   </Typography>
                 </Stack>
@@ -243,7 +290,14 @@ export default async function AboutPage() {
         </Box>
 
         {/* How It Works Section */}
-        <Box sx={{ bgcolor: "#fff", border: "1px solid #EAEAEA", borderRadius: 4, p: { xs: 3, md: 5 } }}>
+        <Box
+          sx={{
+            bgcolor: "#fff",
+            border: "1px solid #EAEAEA",
+            borderRadius: 4,
+            p: { xs: 3, md: 5 },
+          }}
+        >
           <Typography
             variant="h2"
             sx={{
@@ -259,7 +313,13 @@ export default async function AboutPage() {
           </Typography>
           <Typography
             color="text.secondary"
-            sx={{ textAlign: "center", mb: 5, maxWidth: 500, mx: "auto", fontSize: 15 }}
+            sx={{
+              textAlign: "center",
+              mb: 5,
+              maxWidth: 500,
+              mx: "auto",
+              fontSize: 15,
+            }}
           >
             Booking your backwater getaway in 3 seamless steps.
           </Typography>
@@ -294,10 +354,22 @@ export default async function AboutPage() {
                 >
                   {n}
                 </Typography>
-                <Typography variant="h3" sx={{ fontSize: 19, fontWeight: 700, color: "#042842", mb: 1 }}>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: 19,
+                    fontWeight: 700,
+                    color: "#042842",
+                    mb: 1,
+                  }}
+                >
                   {t}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, fontSize: 14 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ lineHeight: 1.6, fontSize: 14 }}
+                >
                   {d}
                 </Typography>
               </Stack>

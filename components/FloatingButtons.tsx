@@ -118,7 +118,7 @@ export default function FloatingButtons({ whatsapp, phone }: Props) {
               transition: "transform 0.2s ease",
             }}
           >
-            <WhatsAppIcon sx={{ fontSize: 28 }} />
+            <WhatsAppIcon className="animated-phone-icon" sx={{ fontSize: 28 }} />
           </Fab>
         </Tooltip>
 

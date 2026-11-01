@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { Box, Button, Chip, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { connectDB } from "@/lib/db";
@@ -15,16 +14,24 @@ export default async function AdminBoats() {
     BoatType.find().lean().then((r) => plain<BoatTypeDTO[]>(r)),
   ]);
   const typeName = Object.fromEntries(types.map((t) => [t.slug, t.name]));
+
   return (
     <Stack spacing={3}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography variant="h4" component="h1">Boats</Typography>
-        <Button component={Link} href="/admin/boats/new" variant="contained">+ Add boat</Button>
+        <Button component="a" href="/admin/boats/new" variant="contained">+ Add boat</Button>
       </Stack>
       <Paper variant="outlined" sx={{ borderRadius: 3, overflowX: "auto" }}>
         <Table>
           <TableHead>
-            <TableRow><TableCell /><TableCell>Name</TableCell><TableCell>Type</TableCell><TableCell>Route</TableCell><TableCell>Status</TableCell><TableCell align="right">Actions</TableCell></TableRow>
+            <TableRow>
+              <TableCell />
+              <TableCell>Name</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Route</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {boats.map((b) => (
@@ -39,7 +46,7 @@ export default async function AdminBoats() {
                 <TableCell>{[b.routeFrom, b.routeTo].filter(Boolean).join(" → ") || "-"}</TableCell>
                 <TableCell><Chip size="small" label={b.active ? "Active" : "Hidden"} color={b.active ? "success" : "default"} /></TableCell>
                 <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
-                  <Button component={Link} href={`/admin/boats/${b._id}`} size="small">Edit</Button>
+                  <Button component="a" href={`/admin/boats/${b._id}`} size="small">Edit</Button>
                   <DeleteButton url={`/api/boats/${b._id}`} confirmText={`Delete "${b.name}" and its images?`} />
                 </TableCell>
               </TableRow>

@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
   try {
     const res = await uploadBuffer(buffer);
     return json({ url: res.secure_url, publicId: res.public_id, width: res.width, height: res.height }, 201);
-  } catch {
+  } catch(error) {
+    console.log(error)
     return json({ error: "Upload failed" }, 502);
   }
 }

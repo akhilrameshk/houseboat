@@ -3,7 +3,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { connectDB } from "@/lib/db";
 import GalleryItem from "@/models/GalleryItem";
 import PhotoGrid from "@/components/PhotoGrid";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Hero from "@/components/Hero";
 import { plain } from "@/lib/serialize";
 import { buildMetadata } from "@/lib/seo";
 import type { GalleryItemDTO } from "@/types";
@@ -20,19 +20,25 @@ export const metadata: Metadata = buildMetadata({
 export default async function GalleryPage() {
   await connectDB();
   const items = plain<GalleryItemDTO[]>(await GalleryItem.find().sort({ createdAt: -1 }).limit(200).lean());
+
   return (
-    <>
-      <Box sx={{ background: "linear-gradient(135deg,#04385B,#0A5C85)", color: "#fff", py: 6 }}>
-        <Container maxWidth="lg"  sx={{
-          mt:10,}}>
-          <Breadcrumbs light items={[{ name: "Gallery", path: "/gallery" }]} />
-          <Typography variant="h1" sx={{ fontSize: 40, mb: 1 }}>Gallery</Typography>
-          <Typography sx={{ color: "#CFE3EA" }}>Photos from our Alleppey houseboats and backwater trips.</Typography>
-        </Container>
-      </Box>
-      <Container maxWidth="lg" sx={{ pt: 4 }}>
-        {items.length === 0 ? <Typography color="text.secondary">Photos will appear here soon.</Typography> : <PhotoGrid images={items} />}
+    <Box sx={{ bgcolor: "#F8F9FA", color: "#2B3A42", pb: 10 }}>
+      {/* Reusable Hero Component */}
+      <Hero
+        eyebrow="✨ ALLEPPEY MERMAID HOUSEBOATS"
+        title="Backwater Photo Gallery"
+        subtitle="Browse authentic moments from our luxury houseboats, traditional shikaras, and tranquil backwater cruises in Alappuzha."
+      />
+
+      <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 6 } }}>
+        {items.length === 0 ? (
+          <Typography color="text.secondary" sx={{ textAlign: "center", py: 8 }}>
+            Photos will appear here soon.
+          </Typography>
+        ) : (
+          <PhotoGrid images={items} />
+        )}
       </Container>
-    </>
+    </Box>
   );
 }
