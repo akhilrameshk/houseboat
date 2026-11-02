@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import {
   Box,
@@ -68,7 +68,7 @@ export default function BoatCard({
     "Day Trip ( 11AM-5PM )" | "Overnight ( 12PM-9AM )"
   >("Overnight ( 12PM-9AM )");
 
-  const isHouseboat = boat.type?.toLowerCase() === "house-boat";
+  const isHouseboat = boat.type?.toLowerCase() === "house-boat" || boat.type?.toLowerCase() === "houseboat";
   
   const imagesList =
     boat.images && boat.images.length > 0
@@ -80,15 +80,6 @@ export default function BoatCard({
 
   const mainImgUrl = imagesList[0]?.url || "/hero.webp";
 
-  // Auto-slide effect for details modal
-  useEffect(() => {
-    if (!openDetails || imagesList.length <= 1) return;
-    const timer = setInterval(() => {
-      setActiveImageIndex((prev) => (prev + 1) % imagesList.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [openDetails, imagesList.length]);
-
   const handleNextImage = () => {
     setActiveImageIndex((prev) => (prev + 1) % imagesList.length);
   };
@@ -98,7 +89,8 @@ export default function BoatCard({
       (prev) => (prev - 1 + imagesList.length) % imagesList.length
     );
   };
-const handleSendWhatsApp = () => {
+
+  const handleSendWhatsApp = () => {
     let isValid = true;
     if (!name.trim()) {
       setNameError(true);
@@ -123,19 +115,27 @@ Hi Team, I would like to inquire about booking a cruise. Here are my trip detail
 
 ━━━━━━━━━━━━━━━━━━━
 👤 *GUEST INFORMATION*
-• *Name:* ${name}
-• *Contact Number:* ${phone}
+- *Name:* 
+${name}
+- *Contact Number:* 
+${phone}
 
 📅 *BOOKING DETAILS*
-• *Boat Type:* ${typeName} (${boat.name})
-• *Arrival Date:* ${arrivalDate || "N/A"}
-• *Trip Package:* ${isHouseboat ? tripType : "Standard Cruise"}
+- *Boat Type:* 
+${typeName} (${boat.name})
+- *Arrival Date:* 
+${arrivalDate || "N/A"}
+- *Trip Package:* 
+${isHouseboat ? tripType : "Standard Cruise"}
 ${isHouseboat ? `• *Rooms Required:* ${rooms}` : ""}
 
 👥 *GUEST COUNT*
-• *Adults:* ${adults}
-• *Children (>5 yrs):* ${childrenAbove5}
-• *Children (<5 yrs):* ${childrenBelow5}
+- *Adults:* 
+${adults}
+- *Children (>5 yrs):* 
+${childrenAbove5}
+- *Children (<5 yrs):* 
+${childrenBelow5}
 ━━━━━━━━━━━━━━━━━━━
 
 ✨ *Please share the best tariff, available options, and package details for this requirement.*
@@ -150,30 +150,33 @@ Thank you! 🧜‍♀️💙`;
     window.open(waUrl, "_blank");
     setOpenEnquiry(false);
   };
+
   return (
     <>
       <Card
         variant="outlined"
         sx={{
-          borderRadius: 3.5,
+          borderRadius: 4,
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           height: "100%",
           bgcolor: "#ffffff",
           borderColor: "#EAEAEA",
-          transition: "all 0.25s ease",
+          boxShadow: "0 4px 20px rgba(4,40,66,0.04)",
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           "&:hover": {
-            transform: "translateY(-4px)",
-            boxShadow: "0 12px 32px rgba(4,40,66,0.1)",
+            transform: "translateY(-6px)",
+            boxShadow: "0 16px 36px rgba(4,40,66,0.12)",
           },
         }}
       >
+        {/* Increased Image Height Portion */}
         <Box
           sx={{
             position: "relative",
             width: "100%",
-            height: 190,
+            height: { xs: 240, sm: 260 },
             bgcolor: "#EAEAEA",
             cursor: "pointer",
           }}
@@ -202,66 +205,98 @@ Thank you! 🧜‍♀️💙`;
               fontWeight: 700,
               fontSize: 11.5,
               borderRadius: 2,
+              backdropFilter: "blur(4px)",
             }}
           />
         </Box>
 
+        {/* Card Content & Details */}
         <CardContent
           sx={{
-            p: 2.5,
+            p: 2,
             flexGrow: 1,
             display: "flex",
             flexDirection: "column",
+            justifyContent: "space-between",
           }}
         >
-          <Typography
-            variant="h6"
-            fontWeight={800}
-            color="#042842"
-            sx={{
-              fontSize: 17,
-              mb: 0.5,
-              lineHeight: 1.25,
-              cursor: "pointer",
-              "&:hover": { color: "#006C9C" },
-            }}
-            onClick={() => {
-              setActiveImageIndex(0);
-              setOpenDetails(true);
-            }}
-          >
-            {boat.name}
-          </Typography>
-
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
-            <GroupIcon sx={{ fontSize: 16, color: "#006C9C" }} />
-            <Typography variant="body2" fontWeight={600} color="text.secondary" sx={{ fontSize: 13 }}>
-              {boat.capacity}
-            </Typography>
-          </Stack>
-
-          {/* Food & Liquid Link on Card (Only for Houseboats) */}
-          {isHouseboat && (
-            <Box
-              component="span"
-              onClick={() => setOpenFoodModal(true)}
+          <Box>
+            <Typography
+              variant="h6"
+              fontWeight={800}
+              color="#042842"
               sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 0.8,
-                color: "#00A859",
-                fontSize: 12.5,
-                fontWeight: 700,
+                fontSize: 16,
+                mb: 0.5,
+                lineHeight: 1.25,
                 cursor: "pointer",
-                mb: 2,
-                "&:hover": { textDecoration: "underline" },
+                "&:hover": { color: "#006C9C" },
+              }}
+              onClick={() => {
+                setActiveImageIndex(0);
+                setOpenDetails(true);
               }}
             >
-              <RestaurantMenuIcon sx={{ fontSize: 15 }} />
-              View Food & Menu Details →
-            </Box>
-          )}
+              {boat.name}
+            </Typography>
 
+            {/* Category & Capacity strictly on a single line with ellipsis support */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                mb: 1.2,
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <Typography
+                variant="body2"
+                fontWeight={700}
+                color="#006C9C"
+                sx={{ fontSize: 12, overflow: "hidden", textOverflow: "ellipsis" }}
+              >
+                {typeName}
+              </Typography>
+              <Box component="span" sx={{ color: "text.disabled", fontSize: 11 }}>•</Box>
+              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ flexShrink: 0 }}>
+                <GroupIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  color="text.secondary"
+                  sx={{ fontSize: 12 }}
+                >
+                  {boat.capacity}
+                </Typography>
+              </Stack>
+            </Box>
+
+            {/* Food Menu Link (Only for Houseboats) */}
+            {isHouseboat && (
+              <Box
+                component="span"
+                onClick={() => setOpenFoodModal(true)}
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 0.6,
+                  color: "#00A859",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  mb: 1.5,
+                  "&:hover": { textDecoration: "underline" },
+                }}
+              >
+                <RestaurantMenuIcon sx={{ fontSize: 14 }} />
+                View Food & Menu Details →
+              </Box>
+            )}
+          </Box>
+
+          {/* Attractive Button Design */}
           <Stack direction="row" spacing={1.5} sx={{ mt: "auto" }}>
             <Button
               fullWidth
@@ -273,13 +308,18 @@ Thank you! 🧜‍♀️💙`;
               }}
               sx={{
                 borderColor: "#D0D0D0",
-                color: "#2B3A42",
+                color: "#042842",
                 textTransform: "none",
                 fontWeight: 700,
                 fontSize: 12.5,
                 py: 0.9,
-                borderRadius: 2,
-                "&:hover": { borderColor: "#006C9C", bgcolor: "rgba(0,108,156,0.02)" },
+                borderRadius: 2.5,
+                transition: "all 0.2s ease",
+                "&:hover": { 
+                  borderColor: "#006C9C", 
+                  bgcolor: "rgba(0,108,156,0.04)",
+                  transform: "translateY(-1px)",
+                },
               }}
             >
               Details
@@ -288,19 +328,23 @@ Thank you! 🧜‍♀️💙`;
             <Button
               fullWidth
               variant="contained"
-              color="success"
               size="small"
               onClick={() => setOpenEnquiry(true)}
-              startIcon={<WhatsAppIcon sx={{ fontSize: "16px !important" }} />}
+              startIcon={<WhatsAppIcon sx={{ fontSize: "15px !important" }} />}
               sx={{
-                bgcolor: "#00A859",
+                background: "linear-gradient(135deg, #00A859 0%, #008F4C 100%)",
                 textTransform: "none",
-                fontWeight: 700,
+                fontWeight: 800,
                 fontSize: 12.5,
                 py: 0.9,
-                borderRadius: 2,
-                boxShadow: "none",
-                "&:hover": { bgcolor: "#008F4C", boxShadow: "none" },
+                borderRadius: 2.5,
+                boxShadow: "0 4px 14px rgba(0, 168, 89, 0.3)",
+                transition: "all 0.2s ease",
+                "&:hover": { 
+                  background: "linear-gradient(135deg, #008F4C 0%, #00753E 100%)", 
+                  boxShadow: "0 6px 18px rgba(0, 168, 89, 0.45)",
+                  transform: "translateY(-1px)",
+                },
               }}
             >
               Enquire
@@ -309,7 +353,7 @@ Thank you! 🧜‍♀️💙`;
         </CardContent>
       </Card>
 
-      {/* ----------------- 1. DETAILS POPUP MODAL (4/5 Image Portion + 1/5 Details Portion) ----------------- */}
+      {/* ----------------- 1. DETAILS POPUP MODAL ----------------- */}
       <Dialog
         open={openDetails}
         onClose={() => setOpenDetails(false)}
@@ -341,12 +385,11 @@ Thank you! 🧜‍♀️💙`;
         </DialogTitle>
 
         <DialogContent dividers sx={{ p: { xs: 2, md: 2.5 }, display: "flex", flexDirection: "column", gap: 2 }}>
-          {/* 4/5 Portion: Large Image Showcase with Auto-Slide */}
           <Box
             sx={{
               position: "relative",
               width: "100%",
-              height: { xs: 360, sm: 460 },
+              height: { xs: 320, sm: 420 },
               borderRadius: 3,
               overflow: "hidden",
               bgcolor: "#F0F2F5",
@@ -428,38 +471,49 @@ Thank you! 🧜‍♀️💙`;
             )}
           </Box>
 
-          {/* 1/5 Portion: Name, Description, and Specs */}
           <Stack spacing={1.5}>
             <Box>
               <Stack
                 direction="row"
                 alignItems="center"
                 spacing={1}
-                sx={{ color: "#006C9C", mb: 0.5 }}
+                sx={{ color: "#006C9C", mb: 1.5 }}
               >
                 <DirectionsBoatIcon fontSize="small" />
                 <Typography fontWeight={700} fontSize={16}>
-                  About This Vessel
+                  Vessel Specifications
                 </Typography>
               </Stack>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ mb: 1.5, lineHeight: 1.6, fontSize: 14 }}
+              {/* Single-line layout without scroll/wrapping */}
+              <Box
+                sx={{
+                  bgcolor: "#F8F9FA",
+                  p: 1.5,
+                  borderRadius: 2.5,
+                  border: "1px solid #EAEAEA",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 1,
+                  whiteSpace: "nowrap",
+                }}
               >
-                {boat.description ||
-                  "Experience the serene backwaters of Alleppey onboard our well-equipped luxury boat with exceptional hospitality."}
-              </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                <Chip label={`Category: ${typeName}`} size="small" variant="outlined" sx={{ fontWeight: 600 }} />
-                <Chip label={`Capacity: ${boat.capacity}`} size="small" variant="outlined" sx={{ fontWeight: 600 }} />
+                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", fontSize: 13 }}>
+                  Category: <Box component="span" sx={{ color: "#042842", fontWeight: 700 }}>{typeName}</Box>
+                </Typography>
+                <Box component="span" sx={{ color: "text.disabled" }}>|</Box>
+                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", fontSize: 13 }}>
+                  Capacity: <Box component="span" sx={{ color: "#042842", fontWeight: 700 }}>{boat.capacity}</Box>
+                </Typography>
                 {boat.duration && (
-                  <Chip label={`Duration: ${boat.duration}`} size="small" variant="outlined" sx={{ fontWeight: 600 }} />
+                  <>
+                    <Box component="span" sx={{ color: "text.disabled" }}>|</Box>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", fontSize: 13 }}>
+                      Duration: <Box component="span" sx={{ color: "#042842", fontWeight: 700 }}>{boat.duration}</Box>
+                    </Typography>
+                  </>
                 )}
-                {boat.routeTo && (
-                  <Chip label={`Route: ${boat.routeTo}`} size="small" variant="outlined" sx={{ fontWeight: 600 }} />
-                )}
-              </Stack>
+              </Box>
             </Box>
           </Stack>
         </DialogContent>
@@ -468,21 +522,20 @@ Thank you! 🧜‍♀️💙`;
           <Button
             fullWidth
             variant="contained"
-            color="success"
             onClick={() => {
               setOpenDetails(false);
               setOpenEnquiry(true);
             }}
             startIcon={<WhatsAppIcon />}
             sx={{
-              bgcolor: "#00A859",
+              background: "linear-gradient(135deg, #00A859 0%, #008F4C 100%)",
               py: 1.2,
               fontWeight: 800,
               textTransform: "none",
               borderRadius: 2.5,
               fontSize: 15,
-              boxShadow: "none",
-              "&:hover": { bgcolor: "#008F4C", boxShadow: "none" },
+              boxShadow: "0 4px 14px rgba(0, 168, 89, 0.3)",
+              "&:hover": { background: "linear-gradient(135deg, #008F4C 0%, #00753E 100%)" },
             }}
           >
             Enquire Now on WhatsApp
@@ -490,7 +543,7 @@ Thank you! 🧜‍♀️💙`;
         </DialogActions>
       </Dialog>
 
-      {/* ----------------- 2. FOOD & BEVERAGES TABBED POPUP ----------------- */}
+      {/* ----------------- 2. FOOD & BEVERAGES POPUP ----------------- */}
       <Dialog
         open={openFoodModal}
         onClose={() => setOpenFoodModal(false)}
@@ -626,20 +679,19 @@ Thank you! 🧜‍♀️💙`;
           <Button
             fullWidth
             variant="contained"
-            color="success"
             onClick={() => {
               setOpenFoodModal(false);
               setOpenEnquiry(true);
             }}
             startIcon={<WhatsAppIcon />}
-            sx={{ bgcolor: "#00A859", py: 1.2, fontWeight: 700, borderRadius: 2 }}
+            sx={{ background: "linear-gradient(135deg, #00A859 0%, #008F4C 100%)", py: 1.2, fontWeight: 700, borderRadius: 2 }}
           >
             Enquire With Meals Included
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* ----------------- 3. ENQUIRY POPUP MODAL (With Customer Phone Number) ----------------- */}
+      {/* ----------------- 3. ENQUIRY POPUP MODAL ----------------- */}
       <Dialog
         open={openEnquiry}
         onClose={() => setOpenEnquiry(false)}
@@ -649,7 +701,7 @@ Thank you! 🧜‍♀️💙`;
       >
         <Box
           sx={{
-            bgcolor: "#00A859",
+            background: "linear-gradient(135deg, #00A859 0%, #008F4C 100%)",
             color: "#fff",
             p: 3,
             position: "relative",
@@ -828,18 +880,17 @@ Thank you! 🧜‍♀️💙`;
           <Button
             fullWidth
             variant="contained"
-            color="success"
             onClick={handleSendWhatsApp}
             startIcon={<WhatsAppIcon />}
             sx={{
-              bgcolor: "#00A859",
+              background: "linear-gradient(135deg, #00A859 0%, #008F4C 100%)",
               py: 1.4,
               fontWeight: 800,
               textTransform: "none",
               borderRadius: 2.5,
               fontSize: 15,
               boxShadow: "0 4px 14px rgba(0, 168, 89, 0.35)",
-              "&:hover": { bgcolor: "#008F4C", boxShadow: "0 6px 20px rgba(0, 168, 89, 0.45)" },
+              "&:hover": { background: "linear-gradient(135deg, #008F4C 0%, #00753E 100%)", boxShadow: "0 6px 20px rgba(0, 168, 89, 0.45)" },
             }}
           >
             Send Requirement on WhatsApp

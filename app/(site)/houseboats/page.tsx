@@ -79,20 +79,21 @@ export default async function HouseboatsPage({
   }, {});
 
   // Priority order for rendering rows
+  const priorityOrder = ["house-boat", "houseboat", "kayaking", "shikara", "speedboat"];
   const typeDisplayOrder = selectedCategory === "all" 
-    ? Array.from(new Set(["house-boat", "shikara", "kayaking", "speedboat", ...Object.keys(groupedBoats)]))
+    ? Array.from(new Set([...priorityOrder, ...Object.keys(groupedBoats)]))
     : [selectedCategory];
 
   const sectionTitle = {
     fontFamily: "serif",
-    fontSize: 28,
+    fontSize: { xs: 24, md: 28 },
     fontWeight: 700,
     color: "#042842",
     mb: 0.5,
   } as const;
 
   return (
-    <Box sx={{ bgcolor: "#F8F9FA", color: "#2B3A42", pb: 10 }}>
+    <Box sx={{ bgcolor: "#F8F9FA", color: "#2B3A42", pb: 12 }}>
       {/* Reusable Hero Component */}
       <Hero
         eyebrow="✨ ALLEPPEY MERMAID HOUSEBOATS"
@@ -101,8 +102,16 @@ export default async function HouseboatsPage({
       />
 
       <Container maxWidth="lg" sx={{ pt: { xs: 4, md: 6 } }}>
-        {/* Category Filter Buttons */}
-        <Stack direction="row" spacing={1.5} sx={{ mb: 5, overflowX: "auto", pb: 1 }}>
+        {/* Category Filter Buttons with responsive flex wrap */}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1.2,
+            mb: 5,
+            justifyContent: { xs: "flex-start", md: "flex-start" },
+          }}
+        >
           <Button
             component="a"
             href="/houseboats"
@@ -110,9 +119,13 @@ export default async function HouseboatsPage({
             sx={{
               borderRadius: 4,
               textTransform: "none",
+              px: 2.5,
+              py: 0.8,
               bgcolor: selectedCategory === "all" ? "#042842" : "transparent",
               color: selectedCategory === "all" ? "#fff" : "#042842",
               borderColor: "#042842",
+              fontWeight: 600,
+              fontSize: 14,
               whiteSpace: "nowrap",
               "&:hover": { bgcolor: selectedCategory === "all" ? "#031D30" : "rgba(4,40,66,0.05)" },
             }}
@@ -128,9 +141,13 @@ export default async function HouseboatsPage({
               sx={{
                 borderRadius: 4,
                 textTransform: "none",
+                px: 2.5,
+                py: 0.8,
                 bgcolor: selectedCategory === t.slug ? "#042842" : "transparent",
                 color: selectedCategory === t.slug ? "#fff" : "#042842",
                 borderColor: "#042842",
+                fontWeight: 600,
+                fontSize: 14,
                 whiteSpace: "nowrap",
                 "&:hover": { bgcolor: selectedCategory === t.slug ? "#031D30" : "rgba(4,40,66,0.05)" },
               }}
@@ -138,7 +155,7 @@ export default async function HouseboatsPage({
               {t.name}
             </Button>
           ))}
-        </Stack>
+        </Box>
 
         {/* Categorized Boats Row-by-Row Layout */}
         {typeDisplayOrder.map((catKey) => {
@@ -169,7 +186,7 @@ export default async function HouseboatsPage({
                 </Box>
               </Stack>
 
-              {/* Responsive Row (Horizontal Scroll on Mobile, Grid on Desktop) */}
+              {/* Mobile horizontal scroll / Desktop 4-column grid */}
               <Box
                 sx={{
                   display: { xs: "flex", md: "grid" },
@@ -188,8 +205,8 @@ export default async function HouseboatsPage({
                   <Box
                     key={b._id}
                     sx={{
-                      minWidth: { xs: "78vw", sm: "45vw", md: "100%" },
-                      width: { xs: "78vw", sm: "45vw", md: "100%" },
+                      minWidth: { xs: "85vw", sm: "45vw", md: "100%" },
+                      width: { xs: "85vw", sm: "45vw", md: "100%" },
                       flexShrink: 0,
                       scrollSnapAlign: "start",
                     }}
