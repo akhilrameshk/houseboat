@@ -626,7 +626,7 @@ Thank you! 🧜‍♀️💙`;
             <Stack spacing={2.5}>
               <Box>
                 <Typography fontWeight={700} color="#042842" fontSize={16} sx={{ mb: 1 }}>
-                  🥥 Welcome Drink & Lunch
+                  🥥 Welcome Drink
                 </Typography>
                 <Typography variant="body2" color="text.secondary" fontSize={14}>
                   Seasonal Fruit Juice upon boarding.
