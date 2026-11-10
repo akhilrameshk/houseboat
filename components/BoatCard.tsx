@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -27,10 +28,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat";
 import GroupIcon from "@mui/icons-material/Group";
 import type { BoatDTO } from "@/types";
 
@@ -47,13 +45,12 @@ export default function BoatCard({
   whatsapp,
   siteName = "Alleppey Mermaid Houseboats",
 }: Props) {
+  const router = useRouter();
   const [openEnquiry, setOpenEnquiry] = useState(false);
-  const [openDetails, setOpenDetails] = useState(false);
   const [openFoodModal, setOpenFoodModal] = useState(false);
   const [foodTab, setFoodTab] = useState(0);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Form State with current date default
+  // Form State
   const todayStr = new Date().toISOString().split("T")[0];
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState(false);
@@ -68,8 +65,10 @@ export default function BoatCard({
     "Day Trip ( 11AM-5PM )" | "Overnight ( 12PM-9AM )"
   >("Overnight ( 12PM-9AM )");
 
-  const isHouseboat = boat.type?.toLowerCase() === "house-boat" || boat.type?.toLowerCase() === "houseboat";
-  
+  const isHouseboat =
+    boat.type?.toLowerCase() === "house-boat" ||
+    boat.type?.toLowerCase() === "houseboat";
+
   const imagesList =
     boat.images && boat.images.length > 0
       ? boat.images.map((img) => ({
@@ -80,14 +79,11 @@ export default function BoatCard({
 
   const mainImgUrl = imagesList[0]?.url || "/hero.webp";
 
-  const handleNextImage = () => {
-    setActiveImageIndex((prev) => (prev + 1) % imagesList.length);
-  };
-
-  const handlePrevImage = () => {
-    setActiveImageIndex(
-      (prev) => (prev - 1 + imagesList.length) % imagesList.length
-    );
+  // Store entire boat object & navigate without API
+  const handleViewDetails = () => {
+    const payload = { ...boat, typeName, whatsapp };
+    sessionStorage.setItem("selectedBoat", JSON.stringify(payload));
+    router.push(`/houseboats/${boat._id}`);
   };
 
   const handleSendWhatsApp = () => {
@@ -115,27 +111,19 @@ Hi Team, I would like to inquire about booking a cruise. Here are my trip detail
 
 ━━━━━━━━━━━━━━━━━━━
 👤 *GUEST INFORMATION*
-- *Name:* 
-${name}
-- *Contact Number:* 
-${phone}
+- *Name:* ${name}
+- *Contact Number:* ${phone}
 
 📅 *BOOKING DETAILS*
-- *Boat Type:* 
-${typeName} (${boat.name})
-- *Arrival Date:* 
-${arrivalDate || "N/A"}
-- *Trip Package:* 
-${isHouseboat ? tripType : "Standard Cruise"}
+- *Boat Type:* ${typeName} (${boat.name})
+- *Arrival Date:* ${arrivalDate || "N/A"}
+- *Trip Package:* ${isHouseboat ? tripType : "Standard Cruise"}
 ${isHouseboat ? `• *Rooms Required:* ${rooms}` : ""}
 
 👥 *GUEST COUNT*
-- *Adults:* 
-${adults}
-- *Children (>5 yrs):* 
-${childrenAbove5}
-- *Children (<5 yrs):* 
-${childrenBelow5}
+- *Adults:* ${adults}
+- *Children (>5 yrs):* ${childrenAbove5}
+- *Children (<5 yrs):* ${childrenBelow5}
 ━━━━━━━━━━━━━━━━━━━
 
 ✨ *Please share the best tariff, available options, and package details for this requirement.*
@@ -171,7 +159,6 @@ Thank you! 🧜‍♀️💙`;
           },
         }}
       >
-        {/* Increased Image Height Portion */}
         <Box
           sx={{
             position: "relative",
@@ -180,10 +167,7 @@ Thank you! 🧜‍♀️💙`;
             bgcolor: "#EAEAEA",
             cursor: "pointer",
           }}
-          onClick={() => {
-            setActiveImageIndex(0);
-            setOpenDetails(true);
-          }}
+          onClick={handleViewDetails}
         >
           <Image
             src={mainImgUrl}
@@ -210,7 +194,6 @@ Thank you! 🧜‍♀️💙`;
           />
         </Box>
 
-        {/* Card Content & Details */}
         <CardContent
           sx={{
             p: 2,
@@ -232,15 +215,11 @@ Thank you! 🧜‍♀️💙`;
                 cursor: "pointer",
                 "&:hover": { color: "#006C9C" },
               }}
-              onClick={() => {
-                setActiveImageIndex(0);
-                setOpenDetails(true);
-              }}
+              onClick={handleViewDetails}
             >
               {boat.name}
             </Typography>
 
-            {/* Category & Capacity strictly on a single line with ellipsis support */}
             <Box
               sx={{
                 display: "flex",
@@ -259,8 +238,15 @@ Thank you! 🧜‍♀️💙`;
               >
                 {typeName}
               </Typography>
-              <Box component="span" sx={{ color: "text.disabled", fontSize: 11 }}>•</Box>
-              <Stack direction="row" alignItems="center" spacing={0.5} sx={{ flexShrink: 0 }}>
+              <Box component="span" sx={{ color: "text.disabled", fontSize: 11 }}>
+                •
+              </Box>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.5}
+                sx={{ flexShrink: 0 }}
+              >
                 <GroupIcon sx={{ fontSize: 14, color: "text.secondary" }} />
                 <Typography
                   variant="body2"
@@ -273,7 +259,6 @@ Thank you! 🧜‍♀️💙`;
               </Stack>
             </Box>
 
-            {/* Food Menu Link (Only for Houseboats) */}
             {isHouseboat && (
               <Box
                 component="span"
@@ -296,16 +281,12 @@ Thank you! 🧜‍♀️💙`;
             )}
           </Box>
 
-          {/* Attractive Button Design */}
           <Stack direction="row" spacing={1.5} sx={{ mt: "auto" }}>
             <Button
               fullWidth
               variant="outlined"
               size="small"
-              onClick={() => {
-                setActiveImageIndex(0);
-                setOpenDetails(true);
-              }}
+              onClick={handleViewDetails}
               sx={{
                 borderColor: "#D0D0D0",
                 color: "#042842",
@@ -315,8 +296,8 @@ Thank you! 🧜‍♀️💙`;
                 py: 0.9,
                 borderRadius: 2.5,
                 transition: "all 0.2s ease",
-                "&:hover": { 
-                  borderColor: "#006C9C", 
+                "&:hover": {
+                  borderColor: "#006C9C",
                   bgcolor: "rgba(0,108,156,0.04)",
                   transform: "translateY(-1px)",
                 },
@@ -332,7 +313,8 @@ Thank you! 🧜‍♀️💙`;
               onClick={() => setOpenEnquiry(true)}
               startIcon={<WhatsAppIcon sx={{ fontSize: "15px !important" }} />}
               sx={{
-                background: "linear-gradient(135deg, #00A859 0%, #008F4C 100%)",
+                background:
+                  "linear-gradient(135deg, #00A859 0%, #008F4C 100%)",
                 textTransform: "none",
                 fontWeight: 800,
                 fontSize: 12.5,
@@ -340,8 +322,9 @@ Thank you! 🧜‍♀️💙`;
                 borderRadius: 2.5,
                 boxShadow: "0 4px 14px rgba(0, 168, 89, 0.3)",
                 transition: "all 0.2s ease",
-                "&:hover": { 
-                  background: "linear-gradient(135deg, #008F4C 0%, #00753E 100%)", 
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #008F4C 0%, #00753E 100%)",
                   boxShadow: "0 6px 18px rgba(0, 168, 89, 0.45)",
                   transform: "translateY(-1px)",
                 },
@@ -353,197 +336,7 @@ Thank you! 🧜‍♀️💙`;
         </CardContent>
       </Card>
 
-      {/* ----------------- 1. DETAILS POPUP MODAL ----------------- */}
-      <Dialog
-        open={openDetails}
-        onClose={() => setOpenDetails(false)}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{ sx: { borderRadius: 4, maxHeight: "95vh" } }}
-      >
-        <DialogTitle
-          sx={{
-            m: 0,
-            p: 2,
-            fontWeight: 800,
-            fontSize: 18,
-            color: "#042842",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            bgcolor: "#F8F9FA",
-            borderBottom: "1px solid #EAEAEA",
-          }}
-        >
-          {boat.name}
-          <IconButton
-            onClick={() => setOpenDetails(false)}
-            sx={{ color: (theme) => theme.palette.grey[500] }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent dividers sx={{ p: { xs: 2, md: 2.5 }, display: "flex", flexDirection: "column", gap: 2 }}>
-          <Box
-            sx={{
-              position: "relative",
-              width: "100%",
-              height: { xs: 320, sm: 420 },
-              borderRadius: 3,
-              overflow: "hidden",
-              bgcolor: "#F0F2F5",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-              flexShrink: 0,
-            }}
-          >
-            <Image
-              src={imagesList[activeImageIndex]?.url || "/hero.webp"}
-              alt={imagesList[activeImageIndex]?.alt || boat.name}
-              fill
-              style={{ objectFit: "cover" }}
-            />
-
-            {imagesList.length > 1 && (
-              <>
-                <IconButton
-                  onClick={handlePrevImage}
-                  sx={{
-                    position: "absolute",
-                    left: 12,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    bgcolor: "rgba(0,0,0,0.6)",
-                    color: "#fff",
-                    "&:hover": { bgcolor: "rgba(0,0,0,0.85)" },
-                  }}
-                >
-                  <NavigateBeforeIcon />
-                </IconButton>
-                <IconButton
-                  onClick={handleNextImage}
-                  sx={{
-                    position: "absolute",
-                    right: 12,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    bgcolor: "rgba(0,0,0,0.6)",
-                    color: "#fff",
-                    "&:hover": { bgcolor: "rgba(0,0,0,0.85)" },
-                  }}
-                >
-                  <NavigateNextIcon />
-                </IconButton>
-
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  sx={{
-                    position: "absolute",
-                    bottom: 14,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    bgcolor: "rgba(0,0,0,0.5)",
-                    px: 2,
-                    py: 0.6,
-                    borderRadius: 4,
-                  }}
-                >
-                  {imagesList.map((_, idx) => (
-                    <Box
-                      key={idx}
-                      onClick={() => setActiveImageIndex(idx)}
-                      sx={{
-                        width: activeImageIndex === idx ? 16 : 8,
-                        height: 8,
-                        borderRadius: 4,
-                        bgcolor:
-                          activeImageIndex === idx
-                            ? "#00A859"
-                            : "rgba(255,255,255,0.7)",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                      }}
-                    />
-                  ))}
-                </Stack>
-              </>
-            )}
-          </Box>
-
-          <Stack spacing={1.5}>
-            <Box>
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={1}
-                sx={{ color: "#006C9C", mb: 1.5 }}
-              >
-                <DirectionsBoatIcon fontSize="small" />
-                <Typography fontWeight={700} fontSize={16}>
-                  Vessel Specifications
-                </Typography>
-              </Stack>
-              {/* Single-line layout without scroll/wrapping */}
-              <Box
-                sx={{
-                  bgcolor: "#F8F9FA",
-                  p: 1.5,
-                  borderRadius: 2.5,
-                  border: "1px solid #EAEAEA",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 1,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", fontSize: 13 }}>
-                  Category: <Box component="span" sx={{ color: "#042842", fontWeight: 700 }}>{typeName}</Box>
-                </Typography>
-                <Box component="span" sx={{ color: "text.disabled" }}>|</Box>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", fontSize: 13 }}>
-                  Capacity: <Box component="span" sx={{ color: "#042842", fontWeight: 700 }}>{boat.capacity}</Box>
-                </Typography>
-                {boat.duration && (
-                  <>
-                    <Box component="span" sx={{ color: "text.disabled" }}>|</Box>
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", fontSize: 13 }}>
-                      Duration: <Box component="span" sx={{ color: "#042842", fontWeight: 700 }}>{boat.duration}</Box>
-                    </Typography>
-                  </>
-                )}
-              </Box>
-            </Box>
-          </Stack>
-        </DialogContent>
-
-        <DialogActions sx={{ p: 2, bgcolor: "#F8F9FA" }}>
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={() => {
-              setOpenDetails(false);
-              setOpenEnquiry(true);
-            }}
-            startIcon={<WhatsAppIcon />}
-            sx={{
-              background: "linear-gradient(135deg, #00A859 0%, #008F4C 100%)",
-              py: 1.2,
-              fontWeight: 800,
-              textTransform: "none",
-              borderRadius: 2.5,
-              fontSize: 15,
-              boxShadow: "0 4px 14px rgba(0, 168, 89, 0.3)",
-              "&:hover": { background: "linear-gradient(135deg, #008F4C 0%, #00753E 100%)" },
-            }}
-          >
-            Enquire Now on WhatsApp
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* ----------------- 2. FOOD & BEVERAGES POPUP ----------------- */}
+      {/* Food Modal & WhatsApp Enquiry Modals intact... */}
       <Dialog
         open={openFoodModal}
         onClose={() => setOpenFoodModal(false)}
@@ -573,7 +366,6 @@ Thank you! 🧜‍♀️💙`;
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-
         <Box sx={{ borderBottom: 1, borderColor: "divider", bgcolor: "#F8F9FA", px: 3 }}>
           <Tabs
             value={foodTab}
@@ -587,7 +379,6 @@ Thank you! 🧜‍♀️💙`;
             <Tab label="Overnight Menu" />
           </Tabs>
         </Box>
-
         <DialogContent sx={{ p: 3.5 }}>
           {foodTab === 0 ? (
             <Stack spacing={2.5}>
@@ -637,7 +428,7 @@ Thank you! 🧜‍♀️💙`;
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: 14, lineHeight: 1.7 }}>
                   • Kerala Matta Rice & Sambar<br />
                   • Karimeen Fry (Pearl Spot - Special Kerala Fish)<br />
-                  • Chicken Curry (Nadan style)<br />
+                  • Puliserry (Nadan style)<br />
                   • Aviyal & Thoran (Mixed Vegetable sides)<br />
                   • Mezhukkupuratti, Pappadam, Pickle 
                 </Typography>
@@ -659,7 +450,7 @@ Thank you! 🧜‍♀️💙`;
                 <Typography variant="body2" color="text.secondary" fontSize={14} sx={{ lineHeight: 1.7 }}>
                   • Soft Chappathis / Appam<br />
                   • Kerala Chicken Roast / Curry/ Veg Curries<br />
-                  •  Fresh Salads
+                  • Fresh Salads
                 </Typography>
               </Box>
               <Divider />
@@ -674,7 +465,6 @@ Thank you! 🧜‍♀️💙`;
             </Stack>
           )}
         </DialogContent>
-
         <DialogActions sx={{ p: 2.5, bgcolor: "#F8F9FA" }}>
           <Button
             fullWidth
@@ -691,7 +481,6 @@ Thank you! 🧜‍♀️💙`;
         </DialogActions>
       </Dialog>
 
-      {/* ----------------- 3. ENQUIRY POPUP MODAL ----------------- */}
       <Dialog
         open={openEnquiry}
         onClose={() => setOpenEnquiry(false)}
